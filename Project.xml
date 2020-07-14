@@ -1,144 +1,210 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <buildster directory="../build">
-	<project directory="../Project">
-		<dependencies>
-			<dependency>
-				<label>colm.net</label>
-				<subpath>build</subpath>
-				<remote>
-					<url>https://github.com/PierceLBrooks/colm.net.git</url>
-					<git_repo>
-						<branch>master</branch>
-						<credentials>
-							<username>username</username>
-							<password>password</password>
-						</credentials>
-					</git_repo>
-				</remote>
-				<build>
-					<arguments></arguments>
-					<cmake>
-						<generator>
-							<switch id="BUILDSTER_OS">
-								<case check="Windows">MinGW Makefiles</case>
-								<case check="Linux">Unix Makefiles</case>
-								<case check="Darwin">Unix Makefiles</case>
-								<default><quit></quit></default>
-							</switch>
-						</generator>
-						<source>..</source>
-					</cmake>
-				</build>
-				<exports>
-					<export type="headers">
-						<key>RAGEL_INCLUDE_PATH</key>
-						<value><install></install>/include</value>
-					</export>
-					<export type="libraries">
-						<key>RAGEL_LIBRARIES</key>
-						<value><install></install>/lib</value>
-					</export>
-				</exports>
-				<imports></imports>
-			</dependency>
-			<dependency>
-				<label>lighttpd2</label>
-				<subpath>build</subpath>
-				<remote>
-					<url>https://github.com/PierceLBrooks/lighttpd2.git</url>
-					<git_repo>
-						<branch>piercelbrooks</branch>
-						<credentials>
-							<username>username</username>
-							<password>password</password>
-						</credentials>
-					</git_repo>
-				</remote>
-				<build>
-					<arguments></arguments>
-					<cmake>
-						<generator>
-							<switch id="BUILDSTER_OS">
-								<case check="Windows">MinGW Makefiles</case>
-								<case check="Linux">Unix Makefiles</case>
-								<case check="Darwin">Unix Makefiles</case>
-								<default><quit></quit></default>
-							</switch>
-						</generator>
-						<source>..</source>
-					</cmake>
-				</build>
-				<exports>
-					<export type="headers">
-						<key>LIGHTTPD_INCLUDE_PATH</key>
-						<value><install></install>/include</value>
-					</export>
-					<export type="libraries">
-						<key>LIGHTTPD_LIBRARIES</key>
-						<value><install></install>/lib</value>
-					</export>
-				</exports>
-				<imports></imports>
-			</dependency>
-			<dependency>
-				<label>vfspp</label>
-				<subpath>build</subpath>
-				<remote>
-					<url>https://github.com/PierceLBrooks/vfspp.git</url>
-					<git_repo>
-						<branch>piercelbrooks</branch>
-						<credentials>
-							<username>username</username>
-							<password>password</password>
-						</credentials>
-					</git_repo>
-				</remote>
-				<build>
-					<arguments></arguments>
-					<cmake>
-						<generator>
-							<switch id="BUILDSTER_OS">
-								<case check="Windows">MinGW Makefiles</case>
-								<case check="Linux">Unix Makefiles</case>
-								<case check="Darwin">Unix Makefiles</case>
-								<default><quit></quit></default>
-							</switch>
-						</generator>
-						<source>..</source>
-					</cmake>
-				</build>
-				<exports>
-					<export type="headers">
-						<key>VFSPP_INCLUDE_PATH</key>
-						<value><install></install>/include</value>
-					</export>
-					<export type="libraries">
-						<key>VFSPP_LIBRARIES</key>
-						<value><install></install>/lib</value>
-					</export>
-				</exports>
-				<imports></imports>
-			</dependency>
-		</dependencies>
-		<targets>
-			<target type="executable">
-				<label>lighttpd</label>
-				<definitions></definitions>
-				<links>
-					<if_check id="BUILDSTER_OS" check="Windows">
-						<link>iphlpapi</link>
-						<link>psapi</link>
-						<link>userenv</link>
-						<link>gdi32</link>
-						<link>crypt32</link>
-						<link>ws2_32</link>
-					</if_check>
-				</links>
-				<imports>
-					<import>lighttpd2</import>
-					<import>vfspp</import>
-				</imports>
-			</target>
-		</targets>
-	</project>
+  <project directory="../Project">
+    <dependencies>
+      <dependency>
+        <label>vcpkg</label>
+        <subpath>build</subpath>
+        <remote>
+          <url>https://github.com/PierceLBrooks/vcpkg.git</url>
+          <git_repo>
+            <branch>master</branch>
+            <credentials>
+              <username>username</username>
+              <password>password</password>
+            </credentials>
+          </git_repo>
+        </remote>
+        <build>
+          <arguments></arguments>
+          <shells>
+            <shell>
+              <work><origin></origin></work>
+              <commands>
+                <command>
+                  <switch id="BUILDSTER_OS">
+                    <case check="Windows">bootstrap-vcpkg.bat</case>
+                    <case check="Linux">./bootstrap-vcpkg.sh</case>
+                    <case check="Darwin">./bootstrap-vcpkg.sh</case>
+                    <default><quit></quit></default>
+                  </switch>
+                </command>
+                <command>
+                  <switch id="BUILDSTER_OS">
+                    <case check="Windows">vcpkg.exe install ragel</case>
+                    <case check="Linux">./vcpkg install ragel</case>
+                    <case check="Darwin">./vcpkg install ragel</case>
+                    <default><quit></quit></default>
+                  </switch>
+                </command>
+              </commands>
+            </shell>
+          </shells>
+        </build>
+        <exports>
+          <export type="all">
+            <key>RAGEL_EXECUTABLE</key>
+            <value>
+              <search type="file">
+                <root><origin></origin>/installed</root>
+                <term>
+                  <switch id="BUILDSTER_OS">
+                    <case check="Windows">ragel.exe</case>
+                    <case check="Linux">ragel</case>
+                    <case check="Darwin">ragel</case>
+                    <default><quit></quit></default>
+                  </switch>
+                </term>
+              </search>
+             </value>
+          </export>
+        </exports>
+        <imports></imports>
+      </dependency>
+      <dependency>
+        <label>libev</label>
+        <subpath>build</subpath>
+        <remote>
+          <url>https://github.com/PierceLBrooks/libev-git.git</url>
+          <git_repo>
+            <branch>piercelbrooks</branch>
+            <credentials>
+              <username>username</username>
+              <password>password</password>
+            </credentials>
+          </git_repo>
+        </remote>
+        <build>
+          <arguments></arguments>
+          <cmake>
+            <generator>
+              <switch id="BUILDSTER_OS">
+                <case check="Windows">MinGW Makefiles</case>
+                <case check="Linux">Unix Makefiles</case>
+                <case check="Darwin">Unix Makefiles</case>
+                <default><quit></quit></default>
+              </switch>
+            </generator>
+            <source>..</source>
+          </cmake>
+        </build>
+        <exports>
+          <export type="all">
+            <key>LIBEV_PATH</key>
+            <value><install></install></value>
+          </export>
+          <export type="headers">
+            <key>LIBEV_INCLUDE_PATH</key>
+            <value><install></install>/include</value>
+          </export>
+          <export type="libraries">
+            <key>LIBEV_LIBDIR</key>
+            <value><install></install>/lib</value>
+          </export>
+        </exports>
+        <imports></imports>
+      </dependency>
+      <dependency>
+        <label>lighttpd2</label>
+        <subpath>build</subpath>
+        <remote>
+          <url>https://github.com/PierceLBrooks/lighttpd2.git</url>
+          <git_repo>
+            <branch>piercelbrooks</branch>
+            <credentials>
+              <username>username</username>
+              <password>password</password>
+            </credentials>
+          </git_repo>
+        </remote>
+        <build>
+          <arguments></arguments>
+          <cmake>
+            <generator>
+              <switch id="BUILDSTER_OS">
+                <case check="Windows">MinGW Makefiles</case>
+                <case check="Linux">Unix Makefiles</case>
+                <case check="Darwin">Unix Makefiles</case>
+                <default><quit></quit></default>
+              </switch>
+            </generator>
+            <source>..</source>
+          </cmake>
+        </build>
+        <exports>
+          <export type="headers">
+            <key>LIGHTTPD_INCLUDE_PATH</key>
+            <value><install></install>/include</value>
+          </export>
+          <export type="libraries">
+            <key>LIGHTTPD_LIBRARIES</key>
+            <value><install></install>/lib</value>
+          </export>
+        </exports>
+        <imports>
+          <import>vcpkg</import>
+          <import>libev</import>
+        </imports>
+      </dependency>
+      <dependency>
+        <label>vfspp</label>
+        <subpath>build</subpath>
+        <remote>
+          <url>https://github.com/PierceLBrooks/vfspp.git</url>
+          <git_repo>
+            <branch>piercelbrooks</branch>
+            <credentials>
+              <username>username</username>
+              <password>password</password>
+            </credentials>
+          </git_repo>
+        </remote>
+        <build>
+          <arguments></arguments>
+          <cmake>
+            <generator>
+              <switch id="BUILDSTER_OS">
+                <case check="Windows">MinGW Makefiles</case>
+                <case check="Linux">Unix Makefiles</case>
+                <case check="Darwin">Unix Makefiles</case>
+                <default><quit></quit></default>
+              </switch>
+            </generator>
+            <source>..</source>
+          </cmake>
+        </build>
+        <exports>
+          <export type="headers">
+            <key>VFSPP_INCLUDE_PATH</key>
+            <value><install></install>/include</value>
+          </export>
+          <export type="libraries">
+            <key>VFSPP_LIBRARIES</key>
+            <value><install></install>/lib</value>
+          </export>
+        </exports>
+        <imports></imports>
+      </dependency>
+    </dependencies>
+    <targets>
+      <target type="executable">
+        <label>lighttpd</label>
+        <definitions></definitions>
+        <links>
+          <if_check id="BUILDSTER_OS" check="Windows">
+            <link>iphlpapi</link>
+            <link>psapi</link>
+            <link>userenv</link>
+            <link>gdi32</link>
+            <link>crypt32</link>
+            <link>ws2_32</link>
+          </if_check>
+        </links>
+        <imports>
+          <import>lighttpd2</import>
+          <import>vfspp</import>
+        </imports>
+      </target>
+    </targets>
+  </project>
 </buildster>
