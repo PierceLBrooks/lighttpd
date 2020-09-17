@@ -118,7 +118,9 @@
           </git_repo>
         </remote>
         <build>
-          <arguments></arguments>
+          <arguments>
+            <argument>-DWITH_LUA=OFF</argument>
+          </arguments>
           <cmake>
             <generator>
               <switch id="BUILDSTER_OS">
@@ -160,7 +162,16 @@
           </git_repo>
         </remote>
         <build>
-          <arguments></arguments>
+          <arguments>
+            <argument>
+              <switch id="BUILDSTER_OS">
+                <case check="Windows">-DPLATFORM=Windows</case>
+                <case check="Linux">-DPLATFORM=Linux</case>
+                <case check="Darwin">-DPLATFORM=macOS</case>
+                <default><quit></quit></default>
+              </switch>
+            </argument>
+          </arguments>
           <cmake>
             <generator>
               <switch id="BUILDSTER_OS">
