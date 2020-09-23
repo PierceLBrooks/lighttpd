@@ -8,7 +8,7 @@
         <remote>
           <url>https://github.com/PierceLBrooks/vcpkg.git</url>
           <git_repo>
-            <branch>master</branch>
+            <branch>2020.01</branch>
             <credentials>
               <username>username</username>
               <password>password</password>
@@ -42,7 +42,7 @@
           </shells>
         </build>
         <exports>
-          <export type="all">
+          <export type="other">
             <key>RAGEL_EXECUTABLE</key>
             <value>
               <search type="file">
@@ -77,14 +77,14 @@
         <build>
           <arguments></arguments>
           <cmake>
-            <generator>
-              <switch id="BUILDSTER_OS">
-                <case check="Windows">MinGW Makefiles</case>
-                <case check="Linux">Unix Makefiles</case>
-                <case check="Darwin">Unix Makefiles</case>
-                <default><quit></quit></default>
-              </switch>
-            </generator>
+						<generator>
+							<switch id="BUILDSTER_OS">
+								<case check="Windows">MinGW Makefiles</case>
+								<case check="Linux">Unix Makefiles</case>
+								<case check="Darwin">Unix Makefiles</case>
+								<default><quit></quit></default>
+							</switch>
+						</generator>
             <source>..</source>
           </cmake>
         </build>
@@ -100,6 +100,88 @@
           <export type="libraries">
             <key>LIBEV_LIBDIR</key>
             <value><install></install>/lib</value>
+          </export>
+        </exports>
+        <imports></imports>
+      </dependency>
+      <dependency>
+        <label>glib</label>
+        <subpath>build</subpath>
+        <remote>
+          <url>https://github.com/PierceLBrooks/glib.git</url>
+          <git_repo>
+            <branch>piercelbrooks</branch>
+            <credentials>
+              <username>username</username>
+              <password>password</password>
+            </credentials>
+          </git_repo>
+        </remote>
+        <build>
+          <arguments></arguments>
+          <pre>
+            <set>
+              <key>DESTDIR</key>
+              <value><install></install>/install</value>
+            </set>
+          </pre>
+          <shells>
+            <shell>
+              <work><origin></origin></work>
+              <commands>
+                <command>meson <install></install>/build</command>
+                <command>ninja -C <install></install>/build</command>
+              </commands>
+            </shell>
+            <shell>
+              <work><install></install>/build</work>
+              <commands>
+                <command>meson install</command>
+              </commands>
+            </shell>
+          </shells>
+          <post><message>DESTDIR=<install></install>/install</message></post>
+        </build>
+        <exports>
+          <export type="headers">
+            <key>GLIB_INCLUDE_DIR</key>
+            <value><install></install>/install/include/glib-2.0</value>
+          </export>
+          <export type="headers">
+            <key>GLIB_INCLUDE_DIRS</key>
+            <value><install></install>/install/include/glib-2.0</value>
+          </export>
+          <export type="headers">
+            <key>GLIBCONFIG_INCLUDE_DIR</key>
+            <value><install></install>/install/lib/glib-2.0/include</value>
+          </export>
+          <export type="libraries">
+            <key>GLIB_LIBRARIES</key>
+            <value><install></install>/install/lib</value>
+          </export>
+          <export type="other">
+            <key>GTHREAD_LDFLAGS</key>
+            <value>-L<install></install>/install/lib -lgthread-2.0 -lglib-2.0</value>
+          </export>
+          <export type="other">
+            <key>GMODULE_LDFLAGS</key>
+            <value>-L<install></install>/install/lib -lgmodule-2.0 -lglib-2.0</value>
+          </export>
+          <export type="other">
+            <key>GTHREAD_CFLAGS_OTHER</key>
+            <value>-I<install></install>/install/include/glib-2.0 -I<install></install>/install/lib/glib-2.0/include</value>
+          </export>
+          <export type="other">
+            <key>GMODULE_CFLAGS_OTHER</key>
+            <value>-I<install></install>/install/include/glib-2.0 -I<install></install>/install/lib/glib-2.0/include</value>
+          </export>
+          <export type="other">
+            <key>GTHREAD_CFLAGS</key>
+            <value>-I<install></install>/install/include/glib-2.0 -I<install></install>/install/lib/glib-2.0/include</value>
+          </export>
+          <export type="other">
+            <key>GMODULE_CFLAGS</key>
+            <value>-I<install></install>/install/include/glib-2.0 -I<install></install>/install/lib/glib-2.0/include</value>
           </export>
         </exports>
         <imports></imports>
@@ -122,14 +204,14 @@
             <argument>-DWITH_LUA=OFF</argument>
           </arguments>
           <cmake>
-            <generator>
-              <switch id="BUILDSTER_OS">
-                <case check="Windows">MinGW Makefiles</case>
-                <case check="Linux">Unix Makefiles</case>
-                <case check="Darwin">Unix Makefiles</case>
-                <default><quit></quit></default>
-              </switch>
-            </generator>
+						<generator>
+							<switch id="BUILDSTER_OS">
+								<case check="Windows">MinGW Makefiles</case>
+								<case check="Linux">Unix Makefiles</case>
+								<case check="Darwin">Unix Makefiles</case>
+								<default><quit></quit></default>
+							</switch>
+						</generator>
             <source>..</source>
           </cmake>
         </build>
@@ -146,6 +228,7 @@
         <imports>
           <import>vcpkg</import>
           <import>libev</import>
+          <import>glib</import>
         </imports>
       </dependency>
       <dependency>
@@ -173,14 +256,14 @@
             </argument>
           </arguments>
           <cmake>
-            <generator>
-              <switch id="BUILDSTER_OS">
-                <case check="Windows">MinGW Makefiles</case>
-                <case check="Linux">Unix Makefiles</case>
-                <case check="Darwin">Unix Makefiles</case>
-                <default><quit></quit></default>
-              </switch>
-            </generator>
+						<generator>
+							<switch id="BUILDSTER_OS">
+								<case check="Windows">MinGW Makefiles</case>
+								<case check="Linux">Unix Makefiles</case>
+								<case check="Darwin">Unix Makefiles</case>
+								<default><quit></quit></default>
+							</switch>
+						</generator>
             <source>..</source>
           </cmake>
         </build>
@@ -200,6 +283,14 @@
     <targets>
       <target type="executable">
         <label>lighttpd</label>
+        <generator>
+          <switch id="BUILDSTER_OS">
+            <case check="Windows">MinGW Makefiles</case>
+            <case check="Linux">Unix Makefiles</case>
+            <case check="Darwin">Unix Makefiles</case>
+            <default><quit></quit></default>
+          </switch>
+        </generator>
         <definitions></definitions>
         <links>
           <if_check id="BUILDSTER_OS" check="Windows">
